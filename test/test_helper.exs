@@ -24,7 +24,7 @@ init = fn ->
 
   refs = TxSupport.fetch_settings_ref()
 
-  [settings_input] = Sutra.Provider.utxos_at_refs([refs])
+  [settings_input] = Sutra.Provider.utxos_at_tx_refs([refs])
 
   TxSupport.register_bridge_stake_credential(settings_input)
 end

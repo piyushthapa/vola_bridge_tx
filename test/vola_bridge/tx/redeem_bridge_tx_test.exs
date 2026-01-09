@@ -18,11 +18,11 @@ defmodule VolaBridge.Tx.RedeemBridgeTxTest do
       receipient1 = {random_address(), 160}
       # receipient2 = {random_address(), 300}
 
-      [settings_utxo] = Provider.utxos_at_refs([TxSupport.fetch_settings_ref()])
+      [settings_utxo] = Provider.utxos_at_tx_refs([TxSupport.fetch_settings_ref()])
 
       with_new_wallet(fn %{signing_key: skey, address: addr} ->
         [user_utxo | _] =
-          Provider.utxos_at([addr])
+          Provider.utxos_at_addresses([addr])
           |> Enum.filter(fn utxo ->
             Asset.lovelace_of(utxo.output.value) > 10_000_000
           end)

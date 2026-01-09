@@ -10,7 +10,7 @@ defmodule VolaBridge.Tx.SettingsTxTest do
   describe "Settings Tx Test" do
     test "settings Place Tx" do
       with_new_wallet(fn %{address: addr, signing_key: skey} ->
-        [addr_utxo | _] = Provider.utxos_at([addr])
+        [addr_utxo | _] = Provider.utxos_at_addresses([addr])
 
         {:ok, tx} =
           Settings.create_settings_tx(addr_utxo)

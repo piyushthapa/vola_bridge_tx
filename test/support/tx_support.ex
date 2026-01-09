@@ -38,7 +38,7 @@ defmodule TxSupport do
         receiever_skey \\ @default_vola_token_holder_skey,
         amount \\ 1_000_000
       ) do
-    addr_utxos = Provider.utxos_at([receiver_addr])
+    addr_utxos = Provider.utxos_at_addresses([receiver_addr])
 
     if addr_utxos == [] do
       PrivnetTest.load_ada(receiver_addr, [5, 100])
@@ -69,7 +69,7 @@ defmodule TxSupport do
   def register_bridge_stake_credential(settings_input \\ nil) do
     settings_input =
       settings_input ||
-        [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_refs() |> hd()
+        [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_tx_refs() |> hd()
 
     VolaBridge.Tx.Bridge.register_stake_credential(
       settings_input,
@@ -84,7 +84,7 @@ defmodule TxSupport do
     case Application.get_env(:vola_bridge_test_settings_ref, :settings_ref_input) do
       nil ->
         PrivnetTest.with_new_wallet(fn %{address: addr, signing_key: skey} ->
-          [addr_utxo | _] = Provider.utxos_at([addr])
+          [addr_utxo | _] = Provider.utxos_at_addresses([addr])
 
           tx_id =
             VolaBridge.Tx.Settings.create_settings_tx(addr_utxo)
@@ -107,7 +107,7 @@ defmodule TxSupport do
   def default_vola_token_holder_addr, do: @vola_default_token_holder
 
   def place_token_to_bridge(amount) do
-    [settings_utxo] = [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_refs()
+    [settings_utxo] = [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_tx_refs()
 
     datum = %BridgeDatum{
       amount: amount,
@@ -131,7 +131,7 @@ defmodule TxSupport do
 
       PrivnetTest.await_tx(tx_id)
 
-      [bridge_input] = Provider.utxos_at_refs(["#{tx_id}#0"])
+      [bridge_input] = Provider.utxos_at_tx_refs(["#{tx_id}#0"])
 
       bridge_input
     end)

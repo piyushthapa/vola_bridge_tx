@@ -20,7 +20,7 @@ defmodule VolaBridge.Tx.BridgeTxTest do
 
   describe "Lock fund to Bridge Test" do
     test "lock fund to Bridge" do
-      [settings_utxo] = [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_refs()
+      [settings_utxo] = [TxSupport.fetch_settings_ref()] |> Provider.utxos_at_tx_refs()
 
       with_new_wallet(fn %{signing_key: skey, address: addr} ->
         vola_token_info = %ScriptInfo{} = TxSupport.mint_vola_token(addr, skey)
